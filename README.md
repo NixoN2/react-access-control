@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# react-access-control
-Integrate role-based access control into your React application effortlessly
-=======
 # React Role Access
 
 Integrate role-based access control into your React application effortlessly.
@@ -39,4 +35,3 @@ import { AccessControl } from "react-role-access";
 </AccessControl>
 ```
 
->>>>>>> master
