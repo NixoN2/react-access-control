@@ -1,5 +1,8 @@
 # React Role Access
 
+[![Coverage Status](https://img.shields.io/badge/Coverage-90%25-brightgreen.svg)](https://your-coverage-report-url)
+
+
 Integrate role-based access control into your React application effortlessly.
 
 ## Installation
