@@ -94,41 +94,28 @@ import { ProtectedRoute, RBAC } from 'react-role-access';
 
 const rbac = new RBAC(/* Define RBAC policies */);
 
-<ProtectedRoute
-  rbac={rbac}
-  role="admin"
-  permission="write"
-  onUnauthorized={(redirectPath) => {
-    console.log(`Unauthorized access, redirecting to: ${redirectPath}`);
-  }}
-  redirectPath="/auth"
-  path="/protected-route"
-  element={<ProtectedComponent />}
-/>;
+<MemoryRouter initialEntries={['/protected']} initialIndex={0}>
+  <Routes>
+    <Route path="/unauthorized" element={<div>authorize</div>} />
+    <Route
+      path="/protected"
+      element={
+        <ProtectedRoute
+          role="admin"
+          permission="read"
+          rbac={mockRbac}
+          onUnauthorized={handleUnauthorized}
+          redirectPath="/unauthorized"
+        >
+          test
+        </ProtectedRoute>
+      }
+    />
+  </Routes>
+</MemoryRouter>
 
 ```
 
-### UseProtectedRouter
-
-```ts
-import { useProtectedRouter, RBAC } from 'react-role-access';
-
-const rbac = new RBAC(/* Define RBAC policies */);
-
-// Initialize protected router hook inside of component
-const protectedRouter = useProtectedRouter('admin', rbac);
-
-// Use the protected push method
-protectedRouter.push(
-  {
-    pathname: '/protected-route',
-    query: { id: '123' },
-  },
-  'write',
-  () => console.log('Unauthorized access'),
-);
-
-```
 
 ### IsAuthorized
 

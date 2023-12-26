@@ -36,8 +36,8 @@ export const ProtectedNextLink: FC<
   };
 
   return (
-    <Link {...rest}>
-      <a onClick={isPermitted ? undefined : handleClick}>{children}</a>
+    <Link {...rest} onClick={isPermitted ? undefined : handleClick}>
+      {children}
     </Link>
   );
 };

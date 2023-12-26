@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { RBAC } from '../rbac';
 import type { LinkProps } from 'react-router-dom';
 import { Permission, Role } from '../types/rbac';
+
 import { Link } from 'react-router-dom';
 
 interface ProtectedReactLinkProps extends LinkProps {

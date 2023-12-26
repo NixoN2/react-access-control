@@ -1,38 +1,33 @@
-import { FC, useEffect } from 'react';
-import { PathRouteProps, Route, useNavigate } from 'react-router-dom';
+import { FC, PropsWithChildren } from 'react';
+import { Navigate } from 'react-router-dom';
 import { RBAC } from '../rbac';
 import { Permission, Role } from '../types/rbac';
 
-interface ProtectedRouteProps extends PathRouteProps {
+interface ProtectedRouteProps {
   rbac: RBAC;
   role: Role;
   permission: Permission;
-  onUnauthorized: (redirectPath?: string) => void;
+  onUnauthorized: (redirectPath: string) => void;
   shouldBePermitted?: boolean;
-  redirectPath?: string;
+  redirectPath: string;
 }
 
-export const ProtectedRoute: FC<ProtectedRouteProps> = ({
+export const ProtectedRoute: FC<PropsWithChildren<ProtectedRouteProps>> = ({
   rbac,
   role,
   permission,
   onUnauthorized,
   shouldBePermitted = true,
   redirectPath,
-  ...rest
+  children,
 }) => {
-  const navigate = useNavigate();
+  const isPermitted =
+    shouldBePermitted && rbac.checkPermission(role, permission);
 
-  useEffect(() => {
-    const isPermitted =
-      shouldBePermitted && rbac.checkPermission(role, permission);
-    if (!isPermitted) {
-      onUnauthorized(redirectPath);
-      if (redirectPath) {
-        navigate(redirectPath);
-      }
-    }
-  }, [rbac, role, permission, onUnauthorized, redirectPath, shouldBePermitted]);
+  if (!isPermitted && onUnauthorized) {
+    onUnauthorized(redirectPath);
+    return <Navigate to={redirectPath} />;
+  }
 
-  return <Route {...rest} />;
+  return children;
 };

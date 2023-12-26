@@ -5,7 +5,7 @@ export class RBAC {
   #roleHierarchy?: RoleHierarchy;
 
   constructor(rbac: IRBAC, roleHierarchy?: RoleHierarchy) {
-    if (!rbac || Object.keys(rbac).length === 0) {
+    if (Object.keys(rbac).length === 0) {
       throw new Error('RBAC policies cannot be empty');
     }
     this.#rbac = rbac;
