@@ -1,6 +1,6 @@
 {
   "name": "react-role-access",
-  "version": "0.0.9",
+  "version": "0.1.1",
   "type": "module",
   "description": "Integrate role-based access control into your React application effortlessly",
   "license": "MIT",
