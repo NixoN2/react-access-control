@@ -1,8 +1,8 @@
 {
   "name": "react-role-access",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
-  "description": "Integrate role-based access control into your React application effortlesslyg",
+  "description": "Integrate role-based access control into your React application effortlessly",
   "license": "MIT",
   "scripts": {
     "test": "jest --watch --coverage"
