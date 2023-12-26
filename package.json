@@ -1,17 +1,29 @@
 {
   "name": "react-role-access",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "description": "Integrate role-based access control into your React application effortlesslyg",
   "license": "MIT",
-  "keywords": [ "react", "access-control", "RBAC", "authorization", "security" ],
+  "keywords": [
+    "react",
+    "access-control",
+    "RBAC",
+    "authorization",
+    "security"
+  ],
   "dependencies": {
+    "next": "^14.0.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/NixoN2/react-access-control.git"
+  },
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/andreizhukov"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
@@ -20,8 +32,11 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.1.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   }
