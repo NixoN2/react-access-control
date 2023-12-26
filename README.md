@@ -14,6 +14,9 @@ npm install react-role-access
 
 ### RBAC class
 
+This library has several features in terms of access control: Roles, Permissions, Role Hierarchy and Programmatic permissions. 
+Each component and function has parameter shouldBePermitted to allow developers to block some functions even if role has needed permissions. 
+
 ```ts
 import { RBAC } from 'react-role-access';
 
@@ -125,4 +128,14 @@ protectedRouter.push(
   () => console.log('Unauthorized access'),
 );
 
+```
+
+### IsAuthorized
+
+```ts
+import { isAuthorized, RBAC } from 'react-role-access';
+
+const rbac = new RBAC(/* Define RBAC policies */);
+
+console.log(isAuthorized("user", "read", rbac)) // boolean
 ```
