@@ -64,6 +64,32 @@ const roleHierarchy = {
 const rbacWithCyclicRoles = new RBAC(rbacPolicies, roleHierarchy) // will throw error
 ```
 
+### USE RBAC HOOK
+
+```ts
+import React from 'react';
+import { RBACProvider } from 'react-role-access';
+import { rbac } from './path-to-your-rbac';
+
+const App = () => {
+  return (
+    <RBACProvider rbac={rbac}>
+      {/* Your app components */}
+    </RBACProvider>
+  );
+};
+
+import React from 'react';
+import { useRBAC } from 'react-role-access';
+
+const SomeComponent = () => {
+  const rbac = useRBAC();
+  return (
+    // JSX of the component
+  );
+};
+```
+
 ### Access Control component 
 
 ```ts
@@ -142,3 +168,4 @@ const rbac = new RBAC(/* Define RBAC policies */)
 
 console.log(isAuthorized("user", "read", rbac)) // boolean
 ```
+
