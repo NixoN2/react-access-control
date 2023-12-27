@@ -56,7 +56,7 @@ rbacWithHierarchy.addRoleToHierarchy("editor", "user")
 rbacWithHierarchy.checkPermission("editor", "read") // true
 
 // You can't add cyclic relations to role hierarchy
-const roleHiearchy = {
+const roleHierarchy = {
   admin: ["user"],
   user: ["admin"]
 }
