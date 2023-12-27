@@ -64,7 +64,7 @@ const roleHierarchy = {
 const rbacWithCyclicRoles = new RBAC(rbacPolicies, roleHierarchy) // will throw error
 ```
 
-### USE RBAC HOOK
+### useRBAC hook
 
 ```ts
 import React from 'react';
