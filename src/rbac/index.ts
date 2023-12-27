@@ -2,14 +2,18 @@ import { IRBAC, Permission, Role, RoleHierarchy } from '../types/rbac';
 
 export class RBAC {
   #rbac: IRBAC;
-  #roleHierarchy?: RoleHierarchy;
+  #roleHierarchy: RoleHierarchy;
 
   constructor(rbac: IRBAC, roleHierarchy?: RoleHierarchy) {
     if (Object.keys(rbac).length === 0) {
       throw new Error('RBAC policies cannot be empty');
     }
+    if (roleHierarchy) {
+      this.checkRoleExistance(rbac, roleHierarchy);
+      this.checkCyclicRelations(roleHierarchy);
+    }
     this.#rbac = rbac;
-    this.#roleHierarchy = roleHierarchy;
+    this.#roleHierarchy = roleHierarchy || {};
   }
 
   private isRoleAllowed = (role: Role, permission: Permission): boolean => {
@@ -28,6 +32,36 @@ export class RBAC {
       }
     }
     return false;
+  };
+
+  private checkRoleExistance = (rbac: IRBAC, roleHierarchy: RoleHierarchy) => {
+    for (const role in roleHierarchy) {
+      if (!rbac[role]) {
+        throw new Error(`Role ${role} must exist in RBAC`);
+      }
+      for (const parentRole of roleHierarchy[role]) {
+        if (!rbac[parentRole]) {
+          throw new Error(`Role ${parentRole} must exist in RBAC`);
+        }
+      }
+    }
+  };
+
+  private checkCyclicRelations = (roleHierarchy: RoleHierarchy): void => {
+    for (const role in roleHierarchy) {
+      for (const parentRole of roleHierarchy[role]) {
+        if (!roleHierarchy[parentRole]) {
+          continue;
+        }
+        for (const checkedRole of roleHierarchy[parentRole]) {
+          if (role === checkedRole) {
+            throw new Error(
+              `Cyclic relationship found between roles: ${role} and ${parentRole}`,
+            );
+          }
+        }
+      }
+    }
   };
 
   public checkPermission = (
@@ -76,5 +110,28 @@ export class RBAC {
       }
       this.#rbac[role].push(p);
     }
+  };
+
+  public addRoleToHierarchy = (role: Role, parentRole: Role): void => {
+    if (!this.#rbac[parentRole]) {
+      throw new Error(`Role ${parentRole} must exist in RBAC`);
+    }
+    if (!this.#rbac[role]) {
+      throw new Error(`Role ${role} must exist in RBAC`);
+    }
+
+    const clonedHierarchy: RoleHierarchy = { ...this.#roleHierarchy };
+
+    if (!clonedHierarchy[role]) {
+      clonedHierarchy[role] = [parentRole];
+    } else {
+      if (clonedHierarchy[role].includes(parentRole)) {
+        throw new Error(`Role ${role} already inherits from ${parentRole}`);
+      }
+      clonedHierarchy[role].push(parentRole);
+    }
+
+    this.checkCyclicRelations(clonedHierarchy);
+    this.#roleHierarchy = clonedHierarchy;
   };
 }

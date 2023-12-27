@@ -21,42 +21,55 @@ This library has several features in terms of access control: Roles, Permissions
 Each component and function has parameter shouldBePermitted to allow developers to block some functions even if role has needed permissions. 
 
 ```ts
-import { RBAC } from 'react-role-access';
+import { RBAC } from 'react-role-access'
 
 const rbacPolicies = {
   admin: ['write', 'read'],
   user: ['read'],
-};
+}
 
-const rbac = new RBAC(rbacPolicies);
+const rbac = new RBAC(rbacPolicies)
 
-const isAdminWritePermitted = rbac.checkPermission('admin', 'write'); // true
-const isUserWritePermitted = rbac.checkPermission('user', 'write'); // false
+const isAdminWritePermitted = rbac.checkPermission('admin', 'write') // true
+const isUserWritePermitted = rbac.checkPermission('user', 'write') // false
 
 // Let's say that admin can't write more than 3 times
 const adminWriteCount = 3
 const isAdminWritePermitted = rbac.checkPermission('admin', 'write', adminWriteCount < 4) // false
 
 // Adding new role
-rbac.addRole('manager');
-rbac.addPermissionToRole('manager', ['write', 'delete']);
+rbac.addRole('manager')
+rbac.addPermissionToRole('manager', ['write', 'delete'])
 
 // Define role hierarchy
 const roleHierarchy = {
   admin: ['manager', 'user'],
   manager: ['user'],
-};
+}
 
-const rbacWithHierarchy = new RBAC(rbacPolicies, roleHierarchy);
-const isManagerWritePermitted = rbacWithHierarchy.checkPermission('manager', 'write'); // false
+const rbacWithHierarchy = new RBAC(rbacPolicies, roleHierarchy)
+const isManagerWritePermitted = rbacWithHierarchy.checkPermission('manager', 'write') // false
+
+// Adding roles to hierarchy dynamically
+rbacWithHierarchy.addRole("editor")
+rbacWithHierarchy.addRoleToHierarchy("editor", "user")
+rbacWithHierarchy.checkPermission("editor", "read") // true
+
+// You can't add cyclic relations to role hierarchy
+const roleHiearchy = {
+  admin: ["user"],
+  user: ["admin"]
+}
+
+const rbacWithCyclicRoles = new RBAC(rbacPolicies, roleHierarchy) // will throw error
 ```
 
 ### Access Control component 
 
 ```ts
-import { AccessControl, RBAC } from 'react-role-access';
+import { AccessControl, RBAC } from 'react-role-access'
 
-const rbac = new RBAC(/* Define RBAC policies */);
+const rbac = new RBAC(/* Define RBAC policies */)
 
 // Render component based on permission
 <AccessControl
@@ -72,10 +85,10 @@ const rbac = new RBAC(/* Define RBAC policies */);
 ### ProtectedAnchor/ProtectedReactLink/ProtectedNextLink
 
 ```ts
-import { ProtectedAnchor, RBAC } from 'react-role-access';
+import { ProtectedAnchor, RBAC } from 'react-role-access'
 
 
-const rbac = new RBAC(/* Define RBAC policies */);
+const rbac = new RBAC(/* Define RBAC policies */)
 
 <ProtectedAnchor
   role="admin"
@@ -93,9 +106,9 @@ You also can use ProtectedNextLink and ProtectedReactLink the same way
 ### ProtectedRoute
 
 ```ts
-import { ProtectedRoute, RBAC } from 'react-role-access';
+import { ProtectedRoute, RBAC } from 'react-role-access'
 
-const rbac = new RBAC(/* Define RBAC policies */);
+const rbac = new RBAC(/* Define RBAC policies */)
 
 <MemoryRouter initialEntries={['/protected']} initialIndex={0}>
   <Routes>
@@ -123,9 +136,9 @@ const rbac = new RBAC(/* Define RBAC policies */);
 ### IsAuthorized
 
 ```ts
-import { isAuthorized, RBAC } from 'react-role-access';
+import { isAuthorized, RBAC } from 'react-role-access'
 
-const rbac = new RBAC(/* Define RBAC policies */);
+const rbac = new RBAC(/* Define RBAC policies */)
 
 console.log(isAuthorized("user", "read", rbac)) // boolean
 ```

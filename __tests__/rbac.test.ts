@@ -36,6 +36,17 @@ describe('Testing RBAC', () => {
     });
   });
   describe('Testing RBAC with role hierarchy', () => {
+    it('Throws error when provided with incorrect role hierarchy', () => {
+      expect(() => {
+        new RBAC({ moderator: [] }, { admin: ['user'] });
+      }).toThrow('Role admin must exist in RBAC');
+      expect(() => {
+        new RBAC({ admin: [] }, { admin: ['user'] });
+      }).toThrow('Role user must exist in RBAC');
+      expect(() => {
+        new RBAC({ admin: [], user: [] }, { admin: ['user'], user: ['admin'] });
+      }).toThrow('Cyclic relationship found between roles: admin and user');
+    });
     it('Main functions work correctly', () => {
       const rbac = new RBAC(
         {
@@ -59,6 +70,29 @@ describe('Testing RBAC', () => {
       expect(rbac.checkPermission('user2', 'read')).toBe(true);
 
       expect(rbac.checkPermission('admin', 'not exists')).toBe(false);
+
+      expect(() => {
+        rbac.addRoleToHierarchy('moderator', 'user');
+      }).toThrow('Role moderator must exist in RBAC');
+
+      expect(() => {
+        rbac.addRoleToHierarchy('admin', 'moderator');
+      }).toThrow('Role moderator must exist in RBAC');
+
+      expect(() => {
+        rbac.addRoleToHierarchy('admin', 'user');
+      }).toThrow('Role admin already inherits from user');
+
+      expect(() => {
+        rbac.addRoleToHierarchy('user', 'admin');
+      }).toThrow('Cyclic relationship found between roles: admin and user');
+
+      rbac.addRole('moderator');
+      rbac.addPermissionToRole('moderator', 'edit');
+      rbac.addRoleToHierarchy('moderator', 'user');
+      expect(rbac.checkPermission('moderator', 'read')).toBe(true);
+      rbac.addRoleToHierarchy('admin', 'moderator');
+      expect(rbac.checkPermission('admin', 'edit')).toBe(true);
     });
   });
 });
